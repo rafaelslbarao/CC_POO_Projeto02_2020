@@ -1,13 +1,9 @@
 package br.com.rafaelbarao.dominio;
 
-public class Conta {
-    public static final int TIPO_CONTA_CORRENTE = 1;
-    public static final int TIPO_CONTA_POUPANCA = 2;
-
+public abstract class Conta {
     private Agencia agencia;
     private Integer numero;
     private Double saldo;
-    private int tipoConta;
     private Pessoa titular;
 
     public Conta() {
@@ -42,23 +38,13 @@ public class Conta {
         this.titular = titular;
     }
 
-    public int getTipoConta() {
-        return tipoConta;
-    }
-
-    public void setTipoConta(int tipoConta) {
-        this.tipoConta = tipoConta;
-    }
-
     public void efetuaDeposito(Double valorDeposito) {
         saldo = saldo + valorDeposito;
     }
 
-    public boolean efetuaSaque(Double valorSaque) {
-        if (valorSaque <= saldo) {
-            saldo = saldo - valorSaque;
-            return true;
-        }
-        return false;
+    protected void setSaldo(Double saldo) {
+        this.saldo = saldo;
     }
+
+    public abstract boolean efetuaSaque(Double valorSaque);
 }

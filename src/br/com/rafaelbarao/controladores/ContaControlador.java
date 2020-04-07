@@ -1,8 +1,6 @@
 package br.com.rafaelbarao.controladores;
 
-import br.com.rafaelbarao.dominio.Agencia;
-import br.com.rafaelbarao.dominio.Conta;
-import br.com.rafaelbarao.dominio.Pessoa;
+import br.com.rafaelbarao.dominio.*;
 import br.com.rafaelbarao.interface_usuario.Console;
 import br.com.rafaelbarao.interface_usuario.Menu;
 import br.com.rafaelbarao.interface_usuario.OpcaoMenu;
@@ -10,6 +8,11 @@ import br.com.rafaelbarao.interface_usuario.OpcaoMenu;
 import java.util.ArrayList;
 
 public class ContaControlador {
+    public static final int TIPO_PESSOA_FISICA = 1;
+    public static final int TIPO_PESSOA_JURISICA = 2;
+    //
+    public static final int TIPO_CONTA_CORRENTE = 1;
+    public static final int TIPO_CONTA_POUPANCA = 2;
 
     //Menus
     private static ArrayList<OpcaoMenu> menuMovimentacoes;
@@ -34,13 +37,28 @@ public class ContaControlador {
     }
 
     private Conta criaNovaConta(Agencia agencia, int tipoConta, Pessoa pessoa) {
-        Conta novaConta = new Conta();
-        novaConta.setAgencia(agencia);
-        novaConta.setNumero(getProximoNumeroConta(agencia.getListaContas()));
-        novaConta.setTitular(pessoa);
-        novaConta.setTipoConta(tipoConta);
+        Conta novaConta = null;
+        //
+        switch (tipoConta) {
+            case TIPO_CONTA_CORRENTE:
+                novaConta = new ContaCorrente();
+                break;
+            case TIPO_CONTA_POUPANCA:
+                novaConta = new ContaPoupanca();
+                break;
+        }
+        //
+        if (novaConta != null)
+            atribuiValoresConta(novaConta, pessoa, agencia);
+        //
         agencia.adicionaNovaConta(novaConta);
         return novaConta;
+    }
+
+    private void atribuiValoresConta(Conta conta, Pessoa pessoa, Agencia agencia) {
+        conta.setTitular(pessoa);
+        conta.setNumero(getProximoNumeroConta(agencia.getListaContas()));
+        conta.setAgencia(agencia);
     }
 
     private Integer getProximoNumeroConta(ArrayList<Conta> listaContas) {
@@ -64,13 +82,37 @@ public class ContaControlador {
         //
         console.escreveConsole("Informe o tipo da conta 1 = Corrente / 2 = Poupança");
         Integer tipoConta = console.leNumeroInteiro();
-        while (tipoConta != Conta.TIPO_CONTA_CORRENTE && tipoConta != Conta.TIPO_CONTA_POUPANCA) {
+        while (tipoConta != TIPO_CONTA_CORRENTE && tipoConta != TIPO_CONTA_POUPANCA) {
             console.escreveConsole("Tipo inválido, informe novamente");
             tipoConta = console.leNumeroInteiro();
         }
         //
+        console.escreveConsole("Informe o tipo de pessoa 1 = Pessoa Física / 2 = Pessoa Jurídica");
+        Integer tipoPessoa = console.leNumeroInteiro();
+        while (tipoPessoa != TIPO_PESSOA_FISICA && tipoPessoa != TIPO_PESSOA_JURISICA) {
+            console.escreveConsole("Tipo inválido, informe novamente");
+            tipoPessoa = console.leNumeroInteiro();
+        }
+        //
+        Pessoa pessoa;
+        if (tipoPessoa == TIPO_PESSOA_JURISICA) {
+            pessoa = criaBuscaPessoaJuridica();
+        } else {
+            pessoa = criaBuscaPessoaFisica();
+        }
+        //
+        Conta contaCriada = criaNovaConta(agencia, tipoConta, pessoa);
+        //
+        console.escreveConsole("Conta cadastrada com sucesso. Seu número é: " + contaCriada.getNumero().toString());
+    }
+
+    private Pessoa criaBuscaPessoaFisica() {
         console.escreveConsole("Informe o CPF da pessoa");
         String cpf = console.leLinhaTexto();
+        while (cpf.length() != 11) {
+            console.escreveConsole("CPF inválido. Informe novamente.");
+            cpf = console.leLinhaTexto();
+        }
         Pessoa pessoa = pessoaControlador.buscaPessoa(cpf);
         if (pessoa == null) {
             console.escreveConsole("Informe o nome da pessoa");
@@ -79,11 +121,25 @@ public class ContaControlador {
         } else {
             console.escreveConsole("Cadastro encontrado: " + pessoa.getNome());
         }
+        return pessoa;
+    }
 
-        //
-        Conta contaCriada = criaNovaConta(agencia, tipoConta, pessoa);
-        //
-        console.escreveConsole("Conta cadastrada com sucesso. Seu número é: " + contaCriada.getNumero().toString());
+    private Pessoa criaBuscaPessoaJuridica() {
+        console.escreveConsole("Informe o CPNJ da pessoa");
+        String cnpj = console.leLinhaTexto();
+        while (cnpj.length() != 14) {
+            console.escreveConsole("CPNJ inválido. Informe novamente.");
+            cnpj = console.leLinhaTexto();
+        }
+        Pessoa pessoa = pessoaControlador.buscaPessoa(cnpj);
+        if (pessoa == null) {
+            console.escreveConsole("Informe o nome fantasia");
+            String nomeFantasia = console.leLinhaTexto();
+            pessoa = pessoaControlador.criaPessoa(cnpj, nomeFantasia);
+        } else {
+            console.escreveConsole("Cadastro encontrado: " + pessoa.getNome());
+        }
+        return pessoa;
     }
 
     public void exibeMenuMovimentacoes(Menu menu) {
