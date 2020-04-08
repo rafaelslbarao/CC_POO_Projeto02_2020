@@ -2,6 +2,7 @@ package br.com.rafaelbarao.controladores;
 
 import br.com.rafaelbarao.dominio.Agencia;
 import br.com.rafaelbarao.dominio.Conta;
+import br.com.rafaelbarao.dominio.ContaCorrente;
 import br.com.rafaelbarao.dominio.ContaPoupanca;
 import br.com.rafaelbarao.interface_usuario.Console;
 
@@ -60,13 +61,15 @@ public class AgenciaControlador {
         return null;
     }
 
-    public void atualizaSaldoContaRendimento() {
+    public void atualizaSaldoContasRendimentoEManutencao() {
         for(Agencia agencia : listaAgencias)
         {
             for(Conta conta : agencia.getListaContas())
             {
                 if(conta instanceof ContaPoupanca)
                     ((ContaPoupanca) conta).atualizaSaldoRendimento();
+                else if(conta instanceof ContaCorrente)
+                    ((ContaCorrente) conta).cobraTaxaManutencao();
             }
         }
     }

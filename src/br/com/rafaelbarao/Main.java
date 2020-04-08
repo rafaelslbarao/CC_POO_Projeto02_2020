@@ -71,7 +71,7 @@ public class Main {
                     pessoaControlador.imprimeCadastroPessoas();
                     break;
                 case 5:
-                    agenciaControlador.atualizaSaldoContaRendimento();
+                    agenciaControlador.atualizaSaldoContasRendimentoEManutencao();
                     break;
             }
         } while (!opcaoSelecionada.getOpcao().equals(99));
