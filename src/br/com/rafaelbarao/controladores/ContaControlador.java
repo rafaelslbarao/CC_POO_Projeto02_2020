@@ -33,6 +33,7 @@ public class ContaControlador {
         menuMovimentacoes = new ArrayList<>();
         menuMovimentacoes.add(new OpcaoMenu(1, "Saque"));
         menuMovimentacoes.add(new OpcaoMenu(2, "Depósito"));
+        menuMovimentacoes.add(new OpcaoMenu(3, "Saldo"));
         menuMovimentacoes.add(new OpcaoMenu(99, "Voltar"));
     }
 
@@ -155,6 +156,9 @@ public class ContaControlador {
                 case 2:
                     realizaDeposito(conta);
                     break;
+                case 3:
+                    imprimiSaldo(conta);
+                    break;
             }
         } while (!opcaoSelecionada.getOpcao().equals(99));
     }
@@ -170,7 +174,7 @@ public class ContaControlador {
     }
 
     private void realizaDeposito(Conta conta) {
-        console.escreveConsole("Informe o valor para saque");
+        console.escreveConsole("Informe o valor para depósito");
         Double valor = console.leNumeroDouble();
         conta.efetuaDeposito(valor);
         console.escreveConsole("Depósito efetuado com sucesso. Saldo atual: " + conta.getSaldo().toString());
@@ -195,5 +199,10 @@ public class ContaControlador {
             conta = agencia.getContaPorNumero(numeroConta);
         }
         return conta;
+    }
+
+    private void imprimiSaldo(Conta conta)
+    {
+        console.escreveConsole("Saldo Atual: " + conta.getSaldo());
     }
 }

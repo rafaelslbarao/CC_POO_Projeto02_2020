@@ -1,6 +1,8 @@
 package br.com.rafaelbarao.controladores;
 
 import br.com.rafaelbarao.dominio.Agencia;
+import br.com.rafaelbarao.dominio.Conta;
+import br.com.rafaelbarao.dominio.ContaPoupanca;
 import br.com.rafaelbarao.interface_usuario.Console;
 
 import java.util.ArrayList;
@@ -56,5 +58,16 @@ public class AgenciaControlador {
                 return agencia;
         }
         return null;
+    }
+
+    public void atualizaSaldoContaRendimento() {
+        for(Agencia agencia : listaAgencias)
+        {
+            for(Conta conta : agencia.getListaContas())
+            {
+                if(conta instanceof ContaPoupanca)
+                    ((ContaPoupanca) conta).atualizaSaldoRendimento();
+            }
+        }
     }
 }

@@ -1,6 +1,8 @@
 package br.com.rafaelbarao.dominio;
 
 public abstract class Conta {
+    private static final Double TAXA_DEPOSITO_DEFAULT = 0.0;
+
     private Agencia agencia;
     private Integer numero;
     private Double saldo;
@@ -39,7 +41,7 @@ public abstract class Conta {
     }
 
     public void efetuaDeposito(Double valorDeposito) {
-        saldo = saldo + valorDeposito;
+        saldo = saldo + valorDeposito - TAXA_DEPOSITO_DEFAULT;
     }
 
     protected void setSaldo(Double saldo) {

@@ -43,6 +43,7 @@ public class Main {
         menuPrincipal.add(new OpcaoMenu(2, "Cadastrar Conta"));
         menuPrincipal.add(new OpcaoMenu(3, "Movimentar Conta"));
         menuPrincipal.add(new OpcaoMenu(4, "Imprime cadastro pessoas"));
+        menuPrincipal.add(new OpcaoMenu(5, "Atualiza Saldo Contas Poupança"));
         menuPrincipal.add(new OpcaoMenu(99, "Sair"));
     }
 
@@ -68,6 +69,9 @@ public class Main {
                     break;
                 case 4:
                     pessoaControlador.imprimeCadastroPessoas();
+                    break;
+                case 5:
+                    agenciaControlador.atualizaSaldoContaRendimento();
                     break;
             }
         } while (!opcaoSelecionada.getOpcao().equals(99));
