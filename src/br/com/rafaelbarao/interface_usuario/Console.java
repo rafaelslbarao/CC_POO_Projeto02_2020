@@ -17,6 +17,7 @@ public class Console {
                 scanner.nextLine();
                 return numeroLido;
             } catch (Exception ignored) {
+                scanner.nextLine();
             }
         }
     }
@@ -28,6 +29,7 @@ public class Console {
                 scanner.nextLine();
                 return numeroLido;
             } catch (Exception ignored) {
+                scanner.nextLine();
             }
         }
     }
